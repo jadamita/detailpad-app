@@ -6,10 +6,9 @@ import {
 } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
-import { env } from "~/env.mjs";
 import { prisma } from "~/server/db";
-import { signIn } from "next-auth/react";
 import { UserRole } from "@prisma/client";
+import bcrypt from "bcrypt";
 
 /**
  * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`
@@ -41,22 +40,26 @@ export const authOptions: NextAuthOptions = {
   pages: {
     signIn: "/login",
   },
+  secret: "1105",
+  session: {
+    strategy: "jwt",
+    maxAge: 30 * 24 * 60 * 60, // 30 days, should this be a env var?
+  },
   callbacks: {
     session({ session, user }) {
       if (session.user) {
-        session.user.id = user.id;
-        session.user.role = user.role;
+        // session.user.id = user.id;
+        // session.user.role = user.role;
         // session.user.role = user.role; <-- put other properties on the session here
       }
       return session;
     },
+    async jwt({ token, user, account, profile, isNewUser }) {
+      return token;
+    },
   },
   adapter: PrismaAdapter(prisma),
   debug: process.env.NODE_ENV == "development",
-  session: {
-    maxAge: 30 * 24 * 60 * 60, // 30 days
-    updateAge: 24 * 60 * 60, // 24 hours
-  },
   providers: [
     CredentialsProvider({
       name: "Credentials",
@@ -64,47 +67,29 @@ export const authOptions: NextAuthOptions = {
         username: { label: "Username", type: "text", placeholder: "jsmith" },
         password: { label: "Password", type: "password" },
       },
-      async authorize(credentials, req) {
+      async authorize(credentials: any): Promise<any> {
         const user = await prisma.user.findFirst({
           where: {
-            name: "jadamita",
+            email: credentials?.username,
           },
         });
 
         if (user) {
-          return user;
+          const hashCompare = await bcrypt.compare(
+            credentials.password,
+            user.passwordHash
+          );
+
+          if (hashCompare) {
+            return user;
+          } else {
+            return null;
+          }
         } else {
           return null;
         }
-
-        // Add logic here to look up the user from the credentials supplied
-        // const user = {
-        //   id: "1",
-        //   name: "J Smith",
-        //   email: "jsmith@example.com",
-        //   role: UserRole.MANAGER,
-        // };
-
-        // if (user) {
-        //   // Any object returned will be saved in `user` property of the JWT
-        //   return user;
-        // } else {
-        //   // If you return null then an error will be displayed advising the user to check their details.
-        //   return null;
-
-        //   // You can also Reject this callback with an Error thus the user will be sent to the error page with the error message as a query parameter
-        // }
       },
     }),
-    /**
-     * ...add more providers here.
-     *
-     * Most other providers require a bit more work than the Discord provider. For example, the
-     * GitHub provider requires you to add the `refresh_token_expires_in` field to the Account
-     * model. Refer to the NextAuth.js docs for the provider you want to use. Example:
-     *
-     * @see https://next-auth.js.org/providers/github
-     */
   ],
 };
 
