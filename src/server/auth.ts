@@ -20,7 +20,7 @@ import { User } from "next-auth/core/types";
 declare module "next-auth" {
   interface Session extends DefaultSession {
     user: {
-      id: string;
+      id: number;
       // ...other properties
       role: UserRole;
     } & DefaultSession["user"];
@@ -28,6 +28,7 @@ declare module "next-auth" {
 
   interface User {
     // ...other properties
+    id: number;
     role: UserRole;
   }
 }
