@@ -36,12 +36,8 @@ const Home: NextPage = () => {
         asd {session.data?.user.email}
         <br />
         <Button
-          onClick={() => {
-            () => {
-              void (async () => {
-                await signOut();
-              })();
-            };
+          onClick={async () => {
+            await signOut();
           }}
         >
           Logout
