@@ -3,6 +3,7 @@ import {
   getServerSession,
   type NextAuthOptions,
   type DefaultSession,
+  RequestInternal,
 } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
@@ -10,6 +11,16 @@ import { prisma } from "~/server/db";
 import { UserRole } from "@prisma/client";
 import bcrypt from "bcrypt";
 import { User } from "next-auth/core/types";
+import { Ratelimit } from "@upstash/ratelimit"; // for deno: see above
+import { Redis } from "@upstash/redis";
+import { log } from "next-axiom";
+
+// Create a new ratelimiter, that allows 5 requests per 1 minute
+const ratelimit = new Ratelimit({
+  redis: Redis.fromEnv(),
+  limiter: Ratelimit.slidingWindow(5, "1 m"),
+  analytics: true,
+});
 
 /**
  * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`
@@ -76,6 +87,15 @@ export const authOptions: NextAuthOptions = {
         credentials: Record<"username" | "password", string> | undefined
       ): Promise<User | null> {
         if (credentials != null) {
+          const { success } = await ratelimit.limit(credentials.username);
+
+          if (!success) {
+            log.debug("too-many-login-attempts", {
+              username: credentials?.username,
+            });
+            return null;
+          }
+
           const user = await prisma.user.findFirst({
             where: {
               email: credentials?.username,
