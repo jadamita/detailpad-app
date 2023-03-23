@@ -1,9 +1,10 @@
-import { type NextPage } from "next";
+import { NextPageContext } from "next";
+import type { NextPage } from "next";
 import Head from "next/head";
 import { getSession, signOut, useSession } from "next-auth/react";
 import { Button } from "@mantine/core";
 
-export async function getServerSideProps(context: any) {
+export async function getServerSideProps(context: NextPageContext) {
   const session = await getSession(context);
 
   if (!session) {
@@ -32,11 +33,15 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div>
-        asd {session.status}
+        asd {session.data?.user.email}
         <br />
         <Button
           onClick={() => {
-            signOut();
+            () => {
+              void (async () => {
+                await signOut();
+              })();
+            };
           }}
         >
           Logout

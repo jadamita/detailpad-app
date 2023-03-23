@@ -1,8 +1,7 @@
-import { type NextPage } from "next";
+import { NextPageContext, type NextPage } from "next";
 import {
   TextInput,
   PasswordInput,
-  Checkbox,
   Anchor,
   Paper,
   Title,
@@ -13,15 +12,7 @@ import {
   LoadingOverlay,
   Alert,
 } from "@mantine/core";
-import Head from "next/head";
-import Link from "next/link";
-import {
-  getSession,
-  signIn,
-  SignInResponse,
-  signOut,
-  useSession,
-} from "next-auth/react";
+import { getSession, signIn, SignInResponse } from "next-auth/react";
 
 import { useForm } from "@mantine/form";
 import { useRouter } from "next/router";
@@ -33,7 +24,7 @@ interface ILoginProps {
   password: string;
 }
 
-export async function getServerSideProps(context: any) {
+export async function getServerSideProps(context: NextPageContext) {
   const session = await getSession(context);
 
   if (session) {
@@ -77,13 +68,13 @@ const Login: NextPage = () => {
   const submitForm = async (values: ILoginProps) => {
     setIsLoading(true);
     setError("");
-    var result: SignInResponse | undefined = await signIn("credentials", {
+    const result: SignInResponse | undefined = await signIn("credentials", {
       username: values.email,
       password: values.password,
       redirect: false,
     });
     if (result?.status === 200) {
-      router.push("/");
+      await router.push("/");
     } else {
       setIsLoading(false);
       setError("Invalid username or password");
@@ -95,7 +86,7 @@ const Login: NextPage = () => {
       <Title
         align="center"
         sx={(theme) => ({
-          fontFamily: `Greycliff CF, ${theme.fontFamily}`,
+          fontFamily: `Greycliff CF, ${theme.fontFamily || ""}`,
           fontWeight: 900,
         })}
       >

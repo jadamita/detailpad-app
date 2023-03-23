@@ -9,6 +9,7 @@ import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import { prisma } from "~/server/db";
 import { UserRole } from "@prisma/client";
 import bcrypt from "bcrypt";
+import { User } from "next-auth/core/types";
 
 /**
  * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`
@@ -46,7 +47,8 @@ export const authOptions: NextAuthOptions = {
     maxAge: 30 * 24 * 60 * 60, // 30 days, should this be a env var?
   },
   callbacks: {
-    session({ session, user }) {
+    // / session({ session, user }) {
+    session({ session }) {
       if (session.user) {
         // session.user.id = user.id;
         // session.user.role = user.role;
@@ -54,7 +56,9 @@ export const authOptions: NextAuthOptions = {
       }
       return session;
     },
-    async jwt({ token, user, account, profile, isNewUser }) {
+    // async jwt({ token, user, account, profile, isNewUser }) {
+    // eslint-disable-next-line @typescript-eslint/require-await
+    async jwt({ token }) {
       return token;
     },
   },
@@ -67,21 +71,33 @@ export const authOptions: NextAuthOptions = {
         username: { label: "Username", type: "text", placeholder: "jsmith" },
         password: { label: "Password", type: "password" },
       },
-      async authorize(credentials: any): Promise<any> {
-        const user = await prisma.user.findFirst({
-          where: {
-            email: credentials?.username,
-          },
-        });
+      async authorize(
+        credentials: Record<"username" | "password", string> | undefined
+      ): Promise<User | null> {
+        if (credentials != null) {
+          const user = await prisma.user.findFirst({
+            where: {
+              email: credentials?.username,
+            },
+          });
 
-        if (user) {
-          const hashCompare = await bcrypt.compare(
-            credentials.password,
-            user.passwordHash
-          );
+          if (user) {
+            const hashCompare = await bcrypt.compare(
+              credentials.password,
+              user.passwordHash
+            );
 
-          if (hashCompare) {
-            return user;
+            if (hashCompare) {
+              const retUser: User = {
+                id: user.id,
+                name: user.name,
+                email: user.email,
+                role: user.role,
+              };
+              return retUser;
+            } else {
+              return null;
+            }
           } else {
             return null;
           }

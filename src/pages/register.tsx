@@ -11,14 +11,10 @@ import {
   LoadingOverlay,
   Alert,
 } from "@mantine/core";
-import Head from "next/head";
-import Link from "next/link";
-import { signIn, signOut, useSession } from "next-auth/react";
 
 import { api } from "~/utils/api";
 import { isEmail, useForm } from "@mantine/form";
 import { IconAlertCircle, IconAt, IconLock } from "@tabler/icons-react";
-import { useDisclosure } from "@mantine/hooks";
 import { useState } from "react";
 
 interface IRegisterProps {
@@ -75,7 +71,7 @@ const Register: NextPage = () => {
       <Title
         align="center"
         sx={(theme) => ({
-          fontFamily: `Greycliff CF, ${theme.fontFamily}`,
+          fontFamily: `Greycliff CF, ${theme.fontFamily || ""}`,
           fontWeight: 900,
         })}
       >
