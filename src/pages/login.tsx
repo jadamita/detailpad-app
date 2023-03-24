@@ -17,7 +17,7 @@ import { useForm } from "@mantine/form";
 import { useRouter } from "next/router";
 import { ReactElement, useState } from "react";
 import { IconAlertCircle } from "@tabler/icons-react";
-import { NextPageWithLayout } from "~/components/LayoutTypes";
+import { NextPageWithLayout } from "~/components/util/LayoutTypes";
 import BareLayout from "~/layouts/BareLayout";
 
 interface ILoginProps {

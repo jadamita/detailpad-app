@@ -9,11 +9,11 @@ import { type AppType } from "next/app";
 import { type Session } from "next-auth";
 
 import { api } from "~/utils/api";
-import { RouterTransition } from "~/components/RouterTransition";
+import { RouterTransition } from "~/components/util/RouterTransition";
 import { useEffect, useState } from "react";
-import { AppPropsWithLayout } from "~/components/LayoutTypes";
+import { AppPropsWithLayout } from "~/components/util/LayoutTypes";
 import { Router } from "next/router";
-import { LoaderPage } from "~/components/Loader";
+import { LoaderPage } from "~/components/util/Loader";
 
 const MyApp: AppType<{ session: Session | null }> = ({
   Component,
@@ -61,7 +61,7 @@ const MyApp: AppType<{ session: Session | null }> = ({
         <SessionProvider session={session}>
           <RouterTransition />
           {getLayout(loading ? <LoaderPage /> : <Component {...pageProps} />)}
-          <Analytics />
+          {process.env.NODE_ENV == "production" ? <Analytics /> : <></>}
         </SessionProvider>
       </MantineProvider>
     </>

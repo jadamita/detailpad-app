@@ -3,7 +3,7 @@ import Head from "next/head";
 import { getSession, useSession } from "next-auth/react";
 import DashboardLayout from "~/layouts/DashboardLayout";
 import { ReactElement } from "react";
-import { NextPageWithLayout } from "~/components/LayoutTypes";
+import { NextPageWithLayout } from "~/components/util/LayoutTypes";
 
 export async function getServerSideProps(context: NextPageContext) {
   const session = await getSession(context);

@@ -14,7 +14,7 @@ import {
   useMantineTheme,
 } from "@mantine/core";
 import { PropsWithChildren, useState } from "react";
-import { LayoutErrorBoundary } from "~/components/LayoutErrorBoundary";
+import { LayoutErrorBoundary } from "~/components/util/LayoutErrorBoundary";
 import NavigationBar from "~/components/NavigationBar";
 import UserMenu from "~/components/UserMenu";
 
@@ -63,9 +63,9 @@ export default function DashboardLayout({ children }: PropsWithChildren) {
           </Footer>
         }
       >
-        <Box px="md">
-          <LayoutErrorBoundary>{children}</LayoutErrorBoundary>
-        </Box>
+        {/* <Box px="md"> */}
+        <LayoutErrorBoundary>{children}</LayoutErrorBoundary>
+        {/* </Box> */}
       </AppShell>
     </>
   );
