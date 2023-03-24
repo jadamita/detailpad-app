@@ -3,6 +3,7 @@ import { z } from "zod";
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
 import bcrypt from "bcrypt";
 import { TRPCError } from "@trpc/server";
+import { UserStatus } from "@prisma/client";
 
 export const userRouter = createTRPCRouter({
   register: publicProcedure
@@ -36,6 +37,7 @@ export const userRouter = createTRPCRouter({
             name: input.username,
             email: input.email,
             passwordHash: hashedPassword,
+            status: UserStatus.PENDING_VERIFICATION,
             company: {
               create: {
                 name: "",
