@@ -16,4 +16,11 @@ Mobile Access: A feature to access the software from mobile devices, allowing us
 
 Integration with other tools: A feature to integrate with other tools, such as accounting software, to streamline business operations.
 
-Customization: A feature to customize the software to suit the specific needs of the business.
+Customization: A feature to customize the software to suit the specific needs of the business.'
+
+
+
+Project:
+- Power navigation items from something else then hard-coded data.
+- Cleanup all the eslint disables :(
+    

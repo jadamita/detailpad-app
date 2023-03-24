@@ -1,4 +1,4 @@
-import { NextPageContext, type NextPage } from "next";
+import { NextPageContext } from "next";
 import {
   TextInput,
   PasswordInput,
@@ -6,7 +6,6 @@ import {
   Paper,
   Title,
   Text,
-  Container,
   Group,
   Button,
   LoadingOverlay,
@@ -16,8 +15,10 @@ import { getSession, signIn, SignInResponse } from "next-auth/react";
 
 import { useForm } from "@mantine/form";
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { ReactElement, useState } from "react";
 import { IconAlertCircle } from "@tabler/icons-react";
+import { NextPageWithLayout } from "~/components/LayoutTypes";
+import BareLayout from "~/layouts/BareLayout";
 
 interface ILoginProps {
   email: string;
@@ -41,7 +42,7 @@ export async function getServerSideProps(context: NextPageContext) {
   };
 }
 
-const Login: NextPage = () => {
+const Login: NextPageWithLayout = () => {
   const router = useRouter();
 
   const [isLoading, setIsLoading] = useState(false);
@@ -82,7 +83,7 @@ const Login: NextPage = () => {
   };
 
   return (
-    <Container size={420} my={40}>
+    <>
       <Title
         align="center"
         sx={(theme) => ({
@@ -140,8 +141,12 @@ const Login: NextPage = () => {
           </Button>
         </form>
       </Paper>
-    </Container>
+    </>
   );
+};
+
+Login.getLayout = function getLayout(page: ReactElement) {
+  return <BareLayout>{page}</BareLayout>;
 };
 
 export default Login;
