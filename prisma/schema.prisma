@@ -11,6 +11,20 @@ datasource db {
     relationMode = "prisma"
 }
 
+enum UserRole {
+    MANAGER
+    EMPLOYEE
+}
+
+enum UserStatus {
+    ACTIVATED
+    PENDING_ACTIVATION
+    PENDING_VERIFICATION
+    DISABLED
+    CLOSED
+    DELETED
+}
+
 // Necessary for Next auth
 model Account {
     id                Int     @id @default(autoincrement())
@@ -42,10 +56,11 @@ model Session {
 }
 
 model User {
-    id           Int      @id @default(autoincrement())
+    id           Int        @id @default(autoincrement())
     name         String?
-    email        String?  @unique
-    role         UserRole @default(MANAGER)
+    email        String?    @unique
+    role         UserRole   @default(MANAGER)
+    status       UserStatus @default(PENDING_ACTIVATION)
     passwordHash String
 
     profile  Profile?
@@ -60,11 +75,6 @@ model VerificationToken {
     expires    DateTime
 
     @@unique([identifier, token])
-}
-
-enum UserRole {
-    MANAGER
-    EMPLOYEE
 }
 
 model Profile {
