@@ -4,6 +4,7 @@ import Head from "next/head";
 import { MantineProvider } from "@mantine/core";
 import { NavigationProgress } from "@mantine/nprogress";
 import { SessionProvider } from "next-auth/react";
+import { Analytics } from "@vercel/analytics/react";
 import { type AppType } from "next/app";
 import { type Session } from "next-auth";
 
@@ -60,6 +61,7 @@ const MyApp: AppType<{ session: Session | null }> = ({
         <SessionProvider session={session}>
           <RouterTransition />
           {getLayout(loading ? <LoaderPage /> : <Component {...pageProps} />)}
+          <Analytics />
         </SessionProvider>
       </MantineProvider>
     </>
