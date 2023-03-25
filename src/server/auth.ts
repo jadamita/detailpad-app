@@ -31,15 +31,23 @@ declare module "next-auth" {
   interface Session extends DefaultSession {
     user: {
       id: number;
-      // ...other properties
       role: UserRole;
+      org: number;
     } & DefaultSession["user"];
   }
 
   interface User {
-    // ...other properties
     id: number;
     role: UserRole;
+    org: number;
+  }
+}
+
+declare module "next-auth/jwt" {
+  interface JWT {
+    id: number;
+    role: UserRole;
+    org: number;
   }
 }
 
@@ -58,18 +66,20 @@ export const authOptions: NextAuthOptions = {
     maxAge: 30 * 24 * 60 * 60, // 30 days, should this be a env var?
   },
   callbacks: {
-    // / session({ session, user }) {
-    session({ session }) {
+    session({ session, token }) {
       if (session.user) {
-        // session.user.id = user.id;
-        // session.user.role = user.role;
-        // session.user.role = user.role; <-- put other properties on the session here
+        session.user.id = token.id;
+        session.user.role = token.role;
+        session.user.org = token.org;
       }
       return session;
     },
-    // async jwt({ token, user, account, profile, isNewUser }) {
     // eslint-disable-next-line @typescript-eslint/require-await
-    async jwt({ token }) {
+    async jwt({ token, user }) {
+      if (user) {
+        token.id = user.id as number;
+        token.role = user.role;
+      }
       return token;
     },
   },
@@ -101,6 +111,9 @@ export const authOptions: NextAuthOptions = {
             where: {
               email: credentials?.username,
             },
+            include: {
+              company: true,
+            },
           });
 
           if (user) {
@@ -115,7 +128,9 @@ export const authOptions: NextAuthOptions = {
                 name: user.name,
                 email: user.email,
                 role: user.role,
+                org: user.company?.id || -1,
               };
+
               return retUser;
             } else {
               return null;

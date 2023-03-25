@@ -18,6 +18,7 @@ import { IconAlertCircle, IconAt, IconLock } from "@tabler/icons-react";
 import { useState } from "react";
 
 interface IRegisterProps {
+  companyName: string;
   username: string;
   email: string;
   password: string;
@@ -29,6 +30,7 @@ const Register: NextPage = () => {
 
   const registerForm = useForm({
     initialValues: {
+      companyName: "",
       username: "",
       email: "",
       password: "",
@@ -36,6 +38,8 @@ const Register: NextPage = () => {
     },
 
     validate: {
+      companyName: (value) =>
+        value.length < 3 ? "Company Name must have at least 3 letters" : null,
       username: (value) =>
         value.length < 3 ? "Name must have at least 3 letters" : null,
       email: isEmail("Invalid email"),
@@ -98,8 +102,15 @@ const Register: NextPage = () => {
         <LoadingOverlay visible={registerMutation.isLoading} overlayBlur={2} />
         <form onSubmit={registerForm.onSubmit((values) => submitForm(values))}>
           <TextInput
+            label="Business Name"
+            placeholder="Your Company Name"
+            required
+            {...registerForm.getInputProps("companyName")}
+          />
+          <TextInput
             label="Username"
             placeholder="Your username"
+            mt="md"
             required
             {...registerForm.getInputProps("username")}
           />

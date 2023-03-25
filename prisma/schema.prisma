@@ -63,10 +63,13 @@ model User {
     status       UserStatus @default(PENDING_ACTIVATION)
     passwordHash String
 
-    profile  Profile?
-    company  Company?
-    accounts Account[]
-    sessions Session[]
+    profile   Profile?
+    company   Company?  @relation(fields: [companyId], references: [id])
+    accounts  Account[]
+    sessions  Session[]
+    companyId Int?
+
+    @@index([companyId])
 }
 
 model VerificationToken {
@@ -90,7 +93,7 @@ model Company {
     name String
 
     userId    Int        @unique
-    user      User       @relation(fields: [userId], references: [id])
+    user      User[]
     customers Customer[]
 }
 
