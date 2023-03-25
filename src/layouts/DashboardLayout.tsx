@@ -3,7 +3,6 @@
 
 import {
   AppShell,
-  Box,
   Burger,
   Footer,
   Group,

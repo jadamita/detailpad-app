@@ -11,7 +11,7 @@ import {
 } from "@mantine/core";
 import { getSession } from "next-auth/react";
 import DashboardLayout from "~/layouts/DashboardLayout";
-import { ReactElement, useEffect } from "react";
+import { ReactElement } from "react";
 import { NextPageWithLayout } from "~/components/util/LayoutTypes";
 import { useDisclosure } from "@mantine/hooks";
 import AddUserModal from "~/components/team/AddUserModal";
@@ -37,7 +37,7 @@ export async function getServerSideProps(context: NextPageContext) {
 // const rolesData = ["Manager", "Collaborator", "Contractor"];
 
 const Team: NextPageWithLayout = () => {
-  const { data, isLoading, refetch } = api.user.getUsers.useQuery();
+  const { data } = api.user.getUsers.useQuery();
 
   const rows = data?.map((item) => (
     <tr key={item.id}>

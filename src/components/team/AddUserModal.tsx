@@ -19,7 +19,7 @@ function AddUserModal({ isOpen, closeModal }: IAddUserProps) {
   //   const isMobile = useMediaQuery("(max-width: 50em)");
 
   const addUserMutation = api.user.addUser.useMutation();
-  const { data, isLoading, refetch } = api.user.getUsers.useQuery();
+  const { refetch } = api.user.getUsers.useQuery();
 
   const addUserForm = useForm({
     initialValues: {
@@ -46,7 +46,7 @@ function AddUserModal({ isOpen, closeModal }: IAddUserProps) {
     const res = await addUserMutation.mutateAsync(values);
     console.log(res);
     addUserForm.reset();
-    refetch();
+    await refetch();
     closeModal();
   };
 

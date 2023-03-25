@@ -52,7 +52,7 @@ export const userRouter = createTRPCRouter({
         },
       });
 
-      var company = await ctx.prisma.company.findFirst({
+      const company = await ctx.prisma.company.findFirst({
         where: {
           userId: ctx.session.user.id,
         },
