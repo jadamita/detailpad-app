@@ -2,6 +2,7 @@ import { NextPageContext } from "next";
 import Head from "next/head";
 import {
   Avatar,
+  Badge,
   Button,
   Group,
   Paper,
@@ -16,6 +17,7 @@ import { NextPageWithLayout } from "~/components/util/LayoutTypes";
 import { useDisclosure } from "@mantine/hooks";
 import AddUserModal from "~/components/team/AddUserModal";
 import { api } from "~/utils/api";
+import { UserStatus } from "@prisma/client";
 
 export async function getServerSideProps(context: NextPageContext) {
   const session = await getSession(context);
@@ -39,6 +41,25 @@ export async function getServerSideProps(context: NextPageContext) {
 const Team: NextPageWithLayout = () => {
   const { data } = api.user.getUsers.useQuery();
 
+  const getStatusBadge = (status: UserStatus) => {
+    switch (status) {
+      case UserStatus.ACTIVATED:
+        return <Badge>Activated</Badge>;
+      case UserStatus.CLOSED:
+        return <Badge>Closed</Badge>;
+      case UserStatus.DELETED:
+        return <Badge>Deleted</Badge>;
+      case UserStatus.DISABLED:
+        return <Badge>Disabled</Badge>;
+      case UserStatus.PENDING_VERIFICATION:
+        return <Badge>Pending Verification</Badge>;
+      case UserStatus.PENDING_ACTIVATION:
+        return <Badge>Pending Activation</Badge>;
+      default:
+        return <Badge>Unknown</Badge>;
+    }
+  };
+
   const rows = data?.map((item) => (
     <tr key={item.id}>
       <td>
@@ -61,19 +82,25 @@ const Team: NextPageWithLayout = () => {
         </Group>
       </td>
 
-      {/* <td>
-        <Select data={rolesData} defaultValue={item.role} variant="unstyled" />
+      <td>
+        {/* <Select
+          data={["Manager", "Employee"]}
+          defaultValue={item.role}
+          variant="unstyled"
+        /> */}
+        {item.role}
       </td>
       <td>{Math.floor(Math.random() * 6 + 5)} days ago</td>
       <td>
-        {Math.random() > 0.5 ? (
+        {getStatusBadge(item.status)}
+        {/* {Math.random() > 0.5 ? (
           <Badge fullWidth>Active</Badge>
         ) : (
           <Badge color="gray" fullWidth>
             Disabled
           </Badge>
-        )}
-      </td> */}
+        )} */}
+      </td>
     </tr>
   ));
 

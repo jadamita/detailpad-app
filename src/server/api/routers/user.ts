@@ -24,9 +24,14 @@ export const userRouter = createTRPCRouter({
             },
           },
         },
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          status: true,
+          role: true,
+        },
       });
-
-      console.log(users);
 
       return users;
     }),
@@ -143,6 +148,15 @@ export const userRouter = createTRPCRouter({
           data: {
             name: input.companyName,
             userId: result.id,
+          },
+        });
+
+        await ctx.prisma.user.update({
+          where: {
+            id: result.id,
+          },
+          data: {
+            companyId: newCompany.id,
           },
         });
 
