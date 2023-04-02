@@ -8,6 +8,7 @@ import {
 import bcrypt from "bcrypt";
 import { TRPCError } from "@trpc/server";
 import { UserRole, UserStatus } from "@prisma/client";
+import { v4 as uuidv4 } from "uuid";
 
 export const userRouter = createTRPCRouter({
   getUsers: roleProtectedProcedure
@@ -30,8 +31,11 @@ export const userRouter = createTRPCRouter({
           email: true,
           status: true,
           role: true,
+          hash: true,
         },
       });
+
+      console.log(users);
 
       return users;
     }),
@@ -77,6 +81,7 @@ export const userRouter = createTRPCRouter({
             passwordHash: hashedPassword,
             status: UserStatus.PENDING_ACTIVATION,
             role: UserRole.EMPLOYEE,
+            hash: uuidv4(),
             company: {
               connect: {
                 id: company?.id,
@@ -135,6 +140,7 @@ export const userRouter = createTRPCRouter({
             email: input.email,
             passwordHash: hashedPassword,
             status: UserStatus.PENDING_VERIFICATION,
+            hash: uuidv4(),
             profile: {
               create: {
                 firstName: "",

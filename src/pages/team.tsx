@@ -17,10 +17,19 @@ import { NextPageWithLayout } from "~/components/util/LayoutTypes";
 import { useDisclosure } from "@mantine/hooks";
 import AddUserModal from "~/components/team/AddUserModal";
 import { api } from "~/utils/api";
-import { UserStatus } from "@prisma/client";
+import { UserRole, UserStatus } from "@prisma/client";
 
 export async function getServerSideProps(context: NextPageContext) {
   const session = await getSession(context);
+
+  if (session?.user.role == UserRole.EMPLOYEE) {
+    return {
+      redirect: {
+        destination: "/",
+        permanent: false,
+      },
+    };
+  }
 
   if (!session) {
     return {
@@ -35,8 +44,6 @@ export async function getServerSideProps(context: NextPageContext) {
     props: { session },
   };
 }
-
-// const rolesData = ["Manager", "Collaborator", "Contractor"];
 
 const Team: NextPageWithLayout = () => {
   const { data } = api.user.getUsers.useQuery();
