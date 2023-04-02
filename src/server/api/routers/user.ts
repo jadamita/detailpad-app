@@ -7,10 +7,62 @@ import {
 } from "~/server/api/trpc";
 import bcrypt from "bcrypt";
 import { TRPCError } from "@trpc/server";
-import { UserRole, UserStatus } from "@prisma/client";
+import { ActivityType, UserRole, UserStatus } from "@prisma/client";
 import { v4 as uuidv4 } from "uuid";
 
 export const userRouter = createTRPCRouter({
+  activateUser: publicProcedure
+    .input(
+      z.object({
+        hash: z.string().uuid(),
+        password: z.string(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const hashedPassword = await bcrypt.hash(input.password, 5);
+
+      const user = await ctx.prisma.user.update({
+        where: {
+          hash: input.hash,
+        },
+        data: {
+          status: UserStatus.ACTIVATED,
+          passwordHash: hashedPassword,
+        },
+      });
+
+      if (user) {
+        await ctx.prisma.activityLog.create({
+          data: {
+            type: ActivityType.USER_ACTIVATE,
+            message: `User: ${user.email || "ERROR"} has been activated`,
+            userId: user.id,
+          },
+        });
+        return true;
+      }
+      return false;
+    }),
+  getUnactivatedUser: publicProcedure
+    .input(
+      z.object({
+        hash: z.string().uuid(),
+      })
+    )
+    .query(async ({ ctx, input }) => {
+      const user = await ctx.prisma.user.findFirst({
+        where: {
+          hash: input.hash,
+          status: UserStatus.PENDING_ACTIVATION,
+        },
+        select: {
+          email: true,
+        },
+      });
+
+      if (user) return user;
+      return null;
+    }),
   getUsers: roleProtectedProcedure
     .meta({ roleRequired: UserRole.MANAGER })
     .query(async ({ ctx }) => {

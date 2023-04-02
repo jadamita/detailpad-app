@@ -128,3 +128,22 @@ model Vehicle {
 
     @@index([customerId])
 }
+
+enum ActivityType {
+    USER_ACTIVATE
+    USER_REGISTER
+    USER_LOGIN
+    USER_LOGOUT
+    USER_RESET_PASSWORD
+    USER_FORGOT_PASSWORD
+    USER_VERIFY
+}
+
+model ActivityLog {
+    id        Int          @id @default(autoincrement())
+    type      ActivityType
+    message   String
+    userId    Int
+    createdAt DateTime     @default(now())
+    updatedAt DateTime     @updatedAt
+}
