@@ -114,6 +114,7 @@ export const AvatarEdit = () => {
             placeholder={<Text align="center">Error loading Image</Text>}
           />
         )}
+        {getAvatar()}
         <FileInput
           value={file}
           onChange={setFile}
