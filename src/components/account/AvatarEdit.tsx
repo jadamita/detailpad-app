@@ -62,8 +62,6 @@ export const AvatarEdit = () => {
         Body: file,
       };
 
-      console.log(params);
-
       try {
         const upload = s3.upload(params);
         setUpload(upload);
@@ -73,14 +71,11 @@ export const AvatarEdit = () => {
         });
         await upload.promise();
         setAvatarMutation.mutate({ name: fileName });
-      } catch (error) {
-        console.log(error);
-      }
+      } catch (error) {}
     }
   };
 
   const getAvatar = () => {
-    console.log("avatar", process.env.NEXT_PUBLIC_MEDIA_URL);
     if (file) return URL.createObjectURL(file);
     return `${process.env.NEXT_PUBLIC_MEDIA_URL as string}/avatars/${
       avatar != null ? avatar : "default_ava.jpg"
@@ -114,7 +109,6 @@ export const AvatarEdit = () => {
             placeholder={<Text align="center">Error loading Image</Text>}
           />
         )}
-        {getAvatar()}
         <FileInput
           value={file}
           onChange={setFile}
