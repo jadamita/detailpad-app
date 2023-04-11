@@ -80,6 +80,7 @@ export const AvatarEdit = () => {
   };
 
   const getAvatar = () => {
+    console.log("avatar", process.env.NEXT_PUBLIC_MEDIA_URL);
     if (file) return URL.createObjectURL(file);
     return `${process.env.NEXT_PUBLIC_MEDIA_URL as string}/avatars/${
       avatar != null ? avatar : "default_ava.jpg"
