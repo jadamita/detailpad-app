@@ -24,23 +24,6 @@ interface IActivateProps {
   confirmPassword: string;
 }
 
-export async function getServerSideProps(context: NextPageContext) {
-  const session = await getSession(context);
-
-  if (session) {
-    return {
-      redirect: {
-        destination: "/",
-        permanent: false,
-      },
-    };
-  }
-
-  return {
-    props: { session },
-  };
-}
-
 const Activate: NextPageWithLayout = () => {
   const router = useRouter();
 

@@ -73,9 +73,9 @@ const Team: NextPageWithLayout = () => {
         <Group spacing="sm">
           <Avatar
             size={40}
-            src={
-              "https://images.unsplash.com/photo-1624298357597-fd92dfbec01d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=250&q=80"
-            }
+            src={`${process.env.NEXT_PUBLIC_MEDIA_URL as string}/avatars/${
+              item.avatar != null ? item.avatar : "default_ava.jpg"
+            }`}
             radius={40}
           />
           <div>

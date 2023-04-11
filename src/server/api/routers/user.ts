@@ -107,6 +107,7 @@ export const userRouter = createTRPCRouter({
         },
         select: {
           id: true,
+          avatar: true,
           name: true,
           email: true,
           status: true,
@@ -114,8 +115,6 @@ export const userRouter = createTRPCRouter({
           hash: true,
         },
       });
-
-      console.log(users);
 
       return users;
     }),
@@ -147,8 +146,6 @@ export const userRouter = createTRPCRouter({
         },
       });
 
-      console.log("user id", ctx.session.user.id);
-
       const DEFAULT_PASSWORD = "123123123";
 
       if (doesExist == null) {
@@ -162,6 +159,7 @@ export const userRouter = createTRPCRouter({
             status: UserStatus.PENDING_ACTIVATION,
             role: UserRole.EMPLOYEE,
             hash: uuidv4(),
+            avatar: "default_ava.jpg",
             company: {
               connect: {
                 id: company?.id,
@@ -175,10 +173,7 @@ export const userRouter = createTRPCRouter({
             },
           },
         });
-
-        console.log(result);
       } else {
-        console.log("already exists");
         throw new TRPCError({
           code: "BAD_REQUEST",
           message: "The username or email already exist",
@@ -221,6 +216,7 @@ export const userRouter = createTRPCRouter({
             passwordHash: hashedPassword,
             status: UserStatus.PENDING_VERIFICATION,
             hash: uuidv4(),
+            avatar: "default_ava.jpg",
             profile: {
               create: {
                 firstName: "",
@@ -245,11 +241,7 @@ export const userRouter = createTRPCRouter({
             companyId: newCompany.id,
           },
         });
-
-        console.log(result);
-        console.log(newCompany);
       } else {
-        console.log("already exists");
         throw new TRPCError({
           code: "BAD_REQUEST",
           message: "The username or email already exist",

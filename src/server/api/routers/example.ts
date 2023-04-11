@@ -16,7 +16,6 @@ export const exampleRouter = createTRPCRouter({
     }),
 
   getAll: publicProcedure.query(({ ctx }) => {
-    console.log(ctx);
     return "asd";
   }),
 

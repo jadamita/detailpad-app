@@ -9,6 +9,7 @@ import {
   FileInput,
   Progress,
   rem,
+  Center,
 } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
 import { IconTrash, IconUpload } from "@tabler/icons-react";
@@ -16,6 +17,7 @@ import { S3 } from "aws-sdk";
 import { useState } from "react";
 import { api } from "~/utils/api";
 import { v4 as uuidv4 } from "uuid";
+import { useSession } from "next-auth/react";
 
 const s3 = new S3({
   endpoint: process.env.NEXT_PUBLIC_R2_ENDPOINT,
@@ -31,10 +33,13 @@ export const AvatarEdit = () => {
   const [isUploading, setIsUploading] = useState(false);
   const [progress, setProg] = useState(0);
 
+  const { data: session, update: sessionUpdate } = useSession();
+
   const { data: avatar, isLoading, refetch } = api.user.getAvatar.useQuery();
   const setAvatarMutation = api.user.setAvatar.useMutation({
     onSuccess: async () => {
       await refetch();
+      sessionUpdate();
       setFile(null);
       notifications.show({
         color: "green",
@@ -53,8 +58,9 @@ export const AvatarEdit = () => {
 
   const uploadAvatar = async () => {
     setIsUploading(true);
+    setProg(0);
     if (file != null) {
-      const fileName = `${uuidv4()}}_${file.name}`;
+      const fileName = `${uuidv4()}_${file.name}`;
 
       const params: S3.Types.PutObjectRequest = {
         Bucket: process.env.NEXT_PUBLIC_R2_BUCKET_NAME as string,
@@ -95,20 +101,22 @@ export const AvatarEdit = () => {
           Avatar
         </Text>
         <Divider my="sm" pb={5} />
-        {isLoading ? (
-          <Skeleton height={200} width={200} mb="xl" radius={"md"} />
-        ) : (
-          <Image
-            radius={"md"}
-            width={200}
-            height={200}
-            src={getAvatar()}
-            alt="Profile Picture"
-            caption={file != null ? "Avatar Preview" : "Current Avatar"}
-            withPlaceholder
-            placeholder={<Text align="center">Error loading Image</Text>}
-          />
-        )}
+        <Center>
+          {isLoading ? (
+            <Skeleton height={200} width={200} mb="xl" radius={"md"} />
+          ) : (
+            <Image
+              radius={"md"}
+              width={200}
+              height={200}
+              src={getAvatar()}
+              alt="Profile Picture"
+              caption={file != null ? "Avatar Preview" : "Current Avatar"}
+              withPlaceholder
+              placeholder={<Text align="center">Error loading Image</Text>}
+            />
+          )}
+        </Center>
         <FileInput
           value={file}
           onChange={setFile}
@@ -140,9 +148,6 @@ export const AvatarEdit = () => {
             Upload
           </Button>
         </Group>
-        {/* <FileButton onChange={setFile} accept="image/png,image/jpeg">
-            {(props) => <Button {...props}>Upload image</Button>}
-          </FileButton> */}
       </Paper>
     </>
   );

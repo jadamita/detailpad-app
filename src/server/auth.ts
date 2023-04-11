@@ -33,6 +33,7 @@ declare module "next-auth" {
       id: number;
       role: UserRole;
       org: number;
+      avatar: string;
     } & DefaultSession["user"];
   }
 
@@ -40,6 +41,7 @@ declare module "next-auth" {
     id: number;
     role: UserRole;
     org: number;
+    avatar: string;
   }
 }
 
@@ -48,6 +50,7 @@ declare module "next-auth/jwt" {
     id: number;
     role: UserRole;
     org: number;
+    avatar: string;
   }
 }
 
@@ -71,16 +74,34 @@ export const authOptions: NextAuthOptions = {
         session.user.id = token.id;
         session.user.role = token.role;
         session.user.org = token.org;
+        session.user.avatar = token.avatar;
       }
       return session;
     },
     // eslint-disable-next-line @typescript-eslint/require-await
-    async jwt({ token, user }) {
+    async jwt({ token, user, trigger }) {
       if (user) {
         token.id = user.id as number;
         token.role = user.role;
         token.org = user.org;
+        token.avatar = user.avatar;
       }
+
+      if (trigger == "update") {
+        const user = await prisma.user.findUnique({
+          where: {
+            id: token.id as number,
+          },
+          select: {
+            avatar: true,
+          },
+        });
+
+        if (user?.avatar) {
+          token.avatar = user?.avatar;
+        }
+      }
+
       return token;
     },
   },
@@ -130,6 +151,7 @@ export const authOptions: NextAuthOptions = {
                 email: user.email,
                 role: user.role,
                 org: user.company?.id || -1,
+                avatar: user.avatar || "default_ava.jpg",
               };
 
               return retUser;

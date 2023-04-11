@@ -132,8 +132,6 @@ const enforceUserIsAuthedAndRole = t.middleware(({ meta, ctx, next }) => {
     throw new TRPCError({ code: "UNAUTHORIZED" });
   }
 
-  console.log(ctx.session.user);
-
   if (ctx.session.user.role != meta?.roleRequired) {
     throw new TRPCError({ code: "UNAUTHORIZED" });
   }

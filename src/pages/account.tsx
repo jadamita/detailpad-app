@@ -35,7 +35,7 @@ const Account: NextPageWithLayout = () => {
       </Head>
       <div>
         <Grid>
-          <Grid.Col lg={6} xs={12}>
+          <Grid.Col xl={3} lg={6} md={6} sm={12} xs={12}>
             <AvatarEdit />
           </Grid.Col>
         </Grid>
