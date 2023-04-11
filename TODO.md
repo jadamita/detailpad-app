@@ -21,9 +21,13 @@ Customization: A feature to customize the software to suit the specific needs of
 
 
 Project:
-- Power navigation items from something else then hard-coded data.
 - Cleanup all the eslint disables :(
 - Update vercel build script to "prisma migrate deploy"
 - Bulletproof register form
 - Bulletproof login form
 - Bulletproof add user form
+- Bulletproof activate user form
+
+
+DONE!
+- Power navigation items from something else then hard-coded data.

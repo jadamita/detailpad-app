@@ -4,7 +4,9 @@ import { getSession } from "next-auth/react";
 import DashboardLayout from "~/layouts/DashboardLayout";
 import { ReactElement } from "react";
 import { NextPageWithLayout } from "~/components/util/LayoutTypes";
-import { Paper, Text } from "@mantine/core";
+import { Grid } from "@mantine/core";
+
+import { AvatarEdit } from "~/components/account/AvatarEdit";
 
 export async function getServerSideProps(context: NextPageContext) {
   const session = await getSession(context);
@@ -32,19 +34,11 @@ const Account: NextPageWithLayout = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div>
-        <Text
-          sx={(theme) => ({
-            fontFamily: `Greycliff CF, ${theme.fontFamily || ""}`,
-            fontWeight: 500,
-            fontSize: 24,
-          })}
-        >
-          Account
-        </Text>
-        <br />
-        <Paper withBorder shadow="md" p={20} radius="md">
-          asd
-        </Paper>
+        <Grid>
+          <Grid.Col lg={6} xs={12}>
+            <AvatarEdit />
+          </Grid.Col>
+        </Grid>
       </div>
     </>
   );

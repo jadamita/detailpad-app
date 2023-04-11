@@ -50,7 +50,7 @@ export default function DashboardLayout({ children }: PropsWithChildren) {
                 />
               </MediaQuery>
               <MediaQuery smallerThan="sm" styles={{ display: "none" }}>
-                <Title>DetailPad</Title>
+                <Title>App</Title>
               </MediaQuery>
               <UserMenu />
             </Group>

@@ -7,6 +7,13 @@ import { withAxiom } from "next-axiom";
 
 /** @type {import("next").NextConfig} */
 const config = withAxiom({
+  images: {
+    domains: [
+      "dpdev.ca858bec81d1bc99aa2d04d31afb614a.r2.cloudflarestorage.com",
+      "ca858bec81d1bc99aa2d04d31afb614a.r2.cloudflarestorage.com",
+      "pub-ff79583998ac49eb854590599b5e33c7.r2.dev",
+    ],
+  },
   reactStrictMode: true,
 
   /**

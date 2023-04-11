@@ -2,6 +2,7 @@ import { z } from "zod";
 
 import {
   createTRPCRouter,
+  protectedProcedure,
   publicProcedure,
   roleProtectedProcedure,
 } from "~/server/api/trpc";
@@ -11,6 +12,33 @@ import { ActivityType, UserRole, UserStatus } from "@prisma/client";
 import { v4 as uuidv4 } from "uuid";
 
 export const userRouter = createTRPCRouter({
+  setAvatar: protectedProcedure
+    .input(
+      z.object({
+        name: z.string(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const user = await ctx.prisma.user.update({
+        where: {
+          id: ctx.session.user.id,
+        },
+        data: {
+          avatar: input.name,
+        },
+      });
+
+      return user?.avatar;
+    }),
+  getAvatar: protectedProcedure.query(async ({ ctx }) => {
+    const user = await ctx.prisma.user.findFirst({
+      where: {
+        id: ctx.session.user.id,
+      },
+    });
+
+    return user?.avatar;
+  }),
   activateUser: publicProcedure
     .input(
       z.object({

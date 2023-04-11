@@ -14,6 +14,7 @@ import { useEffect, useState } from "react";
 import { AppPropsWithLayout } from "~/components/util/LayoutTypes";
 import { Router } from "next/router";
 import { LoaderPage } from "~/components/util/Loader";
+import { Notifications } from "@mantine/notifications";
 
 const MyApp: AppType<{ session: Session | null }> = ({
   Component,
@@ -57,6 +58,7 @@ const MyApp: AppType<{ session: Session | null }> = ({
           colorScheme: "light",
         }}
       >
+        <Notifications />
         <NavigationProgress />
         <SessionProvider session={session}>
           <RouterTransition />
