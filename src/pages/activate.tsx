@@ -1,4 +1,3 @@
-import { NextPageContext } from "next";
 import {
   TextInput,
   PasswordInput,
@@ -8,7 +7,6 @@ import {
   LoadingOverlay,
   Alert,
 } from "@mantine/core";
-import { getSession } from "next-auth/react";
 
 import { useForm } from "@mantine/form";
 import { useRouter } from "next/router";

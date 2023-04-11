@@ -90,7 +90,7 @@ export const authOptions: NextAuthOptions = {
       if (trigger == "update") {
         const user = await prisma.user.findUnique({
           where: {
-            id: token.id as number,
+            id: token.id,
           },
           select: {
             avatar: true,

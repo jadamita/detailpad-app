@@ -39,7 +39,7 @@ export const AvatarEdit = () => {
   const setAvatarMutation = api.user.setAvatar.useMutation({
     onSuccess: async () => {
       await refetch();
-      sessionUpdate();
+      await sessionUpdate();
       setFile(null);
       notifications.show({
         color: "green",
