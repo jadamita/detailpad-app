@@ -62,6 +62,8 @@ export const AvatarEdit = () => {
         Body: file,
       };
 
+      console.log(params);
+
       try {
         const upload = s3.upload(params);
         setUpload(upload);
@@ -71,7 +73,9 @@ export const AvatarEdit = () => {
         });
         await upload.promise();
         setAvatarMutation.mutate({ name: fileName });
-      } catch (error) {}
+      } catch (error) {
+        console.log(error);
+      }
     }
   };
 
