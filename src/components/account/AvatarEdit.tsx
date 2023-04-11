@@ -18,10 +18,10 @@ import { api } from "~/utils/api";
 import { v4 as uuidv4 } from "uuid";
 
 const s3 = new S3({
-  endpoint: process.env.R2_ENDPOINT,
-  accessKeyId: process.env.R2_KEY_ID,
-  secretAccessKey: process.env.R2_SECRET,
-  signatureVersion: process.env.R2_SIG_VER,
+  endpoint: process.env.NEXT_PUBLIC_R2_ENDPOINT,
+  accessKeyId: process.env.NEXT_PUBLIC_R2_KEY_ID,
+  secretAccessKey: process.env.NEXT_PUBLIC_R2_SECRET,
+  signatureVersion: process.env.NEXT_PUBLIC_R2_SIG_VER,
 });
 
 export const AvatarEdit = () => {
@@ -56,11 +56,8 @@ export const AvatarEdit = () => {
     if (file != null) {
       const fileName = `${uuidv4()}}_${file.name}`;
 
-      const bucketName = process.env.R2_BUCKET_NAME as string;
-      console.log(bucketName);
-
       const params: S3.Types.PutObjectRequest = {
-        Bucket: "dpprod",
+        Bucket: process.env.NEXT_PUBLIC_R2_BUCKET_NAME as string,
         Key: `${"avatars/"}${fileName}`,
         Body: file,
       };
@@ -84,7 +81,7 @@ export const AvatarEdit = () => {
 
   const getAvatar = () => {
     if (file) return URL.createObjectURL(file);
-    return `${process.env.MEDIA_URL as string}/avatars/${
+    return `${process.env.NEXT_PUBLIC_MEDIA_URL as string}/avatars/${
       avatar != null ? avatar : "default_ava.jpg"
     }`;
   };
