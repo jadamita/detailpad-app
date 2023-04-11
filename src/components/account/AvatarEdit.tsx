@@ -56,8 +56,11 @@ export const AvatarEdit = () => {
     if (file != null) {
       const fileName = `${uuidv4()}}_${file.name}`;
 
+      const bucketName = process.env.R2_BUCKET_NAME as string;
+      console.log(bucketName);
+
       const params: S3.Types.PutObjectRequest = {
-        Bucket: process.env.R2_BUCKET_NAME as string,
+        Bucket: "dpprod",
         Key: `${"avatars/"}${fileName}`,
         Body: file,
       };
