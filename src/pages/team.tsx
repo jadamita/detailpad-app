@@ -72,7 +72,7 @@ const Team: NextPageWithLayout = () => {
       <td>
         <Group spacing="sm">
           <Avatar
-            size={40}
+            size={70}
             src={`${process.env.NEXT_PUBLIC_MEDIA_URL as string}/avatars/${
               item.avatar != null ? item.avatar : "default_ava.jpg"
             }`}

@@ -7,6 +7,7 @@ import { NextPageWithLayout } from "~/components/util/LayoutTypes";
 import { Grid } from "@mantine/core";
 
 import { AvatarEdit } from "~/components/account/AvatarEdit";
+import { ProfileEdit } from "~/components/account/ProfileEdit";
 
 export async function getServerSideProps(context: NextPageContext) {
   const session = await getSession(context);
@@ -37,6 +38,9 @@ const Account: NextPageWithLayout = () => {
         <Grid>
           <Grid.Col xl={3} lg={6} md={6} sm={12} xs={12}>
             <AvatarEdit />
+          </Grid.Col>
+          <Grid.Col xl={5} lg={6} md={6} sm={12} xs={12}>
+            <ProfileEdit />
           </Grid.Col>
         </Grid>
       </div>
