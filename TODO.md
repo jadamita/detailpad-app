@@ -22,11 +22,11 @@ Customization: A feature to customize the software to suit the specific needs of
 
 Project:
 - Cleanup all the eslint disables :(
-- Update vercel build script to "prisma migrate deploy"
 - Bulletproof register form
 - Bulletproof login form
 - Bulletproof add user form
 - Bulletproof activate user form
+- Add time preview to time zone select
 
 
 DONE!

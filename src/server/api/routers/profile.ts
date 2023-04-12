@@ -8,6 +8,7 @@ export const profileRouter = createTRPCRouter({
       z.object({
         firstName: z.string(),
         lastName: z.string(),
+        timeZone: z.string(),
       })
     )
     .mutation(async ({ ctx, input }) => {
@@ -18,6 +19,7 @@ export const profileRouter = createTRPCRouter({
         data: {
           firstName: input.firstName,
           lastName: input.lastName,
+          timeZone: input.timeZone,
         },
       });
     }),
@@ -29,6 +31,7 @@ export const profileRouter = createTRPCRouter({
       select: {
         firstName: true,
         lastName: true,
+        timeZone: true,
       },
     });
   }),

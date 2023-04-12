@@ -87,6 +87,7 @@ model Profile {
     id        Int     @id @default(autoincrement())
     firstName String?
     lastName  String?
+    timeZone  String? @default("Eastern Standard Time")
     userId    Int     @unique
     user      User    @relation(fields: [userId], references: [id])
 }
