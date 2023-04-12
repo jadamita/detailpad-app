@@ -42,6 +42,7 @@ export const ProfileEdit = () => {
       firstName: data?.firstName || "",
       lastName: data?.lastName || "",
     });
+    /* eslint-disable react-hooks/exhaustive-deps */
   }, [isLoading, data]);
 
   return (
