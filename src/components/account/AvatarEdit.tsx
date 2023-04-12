@@ -126,6 +126,7 @@ export const AvatarEdit = () => {
           accept="image/png,image/jpeg"
           withAsterisk
         />
+        <Divider my="sm" />
         {isUploading && <Progress mt={15} value={progress} />}
         <Group position="right" mt="md">
           <Button
