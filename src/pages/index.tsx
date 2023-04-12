@@ -1,20 +1,13 @@
 import { NextPageContext } from "next";
 import Head from "next/head";
-import { getSession, useSession } from "next-auth/react";
+import { getSession } from "next-auth/react";
 import DashboardLayout from "~/layouts/DashboardLayout";
 import { ReactElement } from "react";
 import { NextPageWithLayout } from "~/components/util/LayoutTypes";
 import { Grid } from "@mantine/core";
 
 import { StatCard } from "~/components/dashboard/StatCard";
-import {
-  IconBrandTwitch,
-  IconCactus,
-  IconCalendar,
-  IconCash,
-  IconMoneybag,
-  IconStar,
-} from "@tabler/icons-react";
+import { IconCalendar, IconCash, IconStar } from "@tabler/icons-react";
 
 export async function getServerSideProps(context: NextPageContext) {
   const session = await getSession(context);

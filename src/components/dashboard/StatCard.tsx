@@ -1,11 +1,6 @@
 import { Paper, Group, rem, createStyles, Text } from "@mantine/core";
-import {
-  IconArrowDownRight,
-  IconArrowUpRight,
-  IconCalendar,
-} from "@tabler/icons-react";
-import { stat } from "fs";
-import { cloneElement, createElement } from "react";
+import { IconArrowDownRight, IconArrowUpRight } from "@tabler/icons-react";
+import { cloneElement } from "react";
 
 interface IStatCard {
   title: string;
@@ -57,6 +52,7 @@ export const StatCard = (props: IStatCard) => {
           <Text size="xs" color="dimmed" className={classes.title}>
             {props.title}
           </Text>
+          {/* eslint-disable @typescript-eslint/no-explicit-any */}
           {cloneElement(props.icon as React.ReactElement<any>, {
             size: "1.4rem",
             stroke: "1.5",
