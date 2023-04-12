@@ -42,7 +42,7 @@ export const ProfileEdit = () => {
       firstName: data?.firstName || "",
       lastName: data?.lastName || "",
     });
-  }, [isLoading, data, profileForm]);
+  }, [isLoading, data]);
 
   return (
     <>
