@@ -106,6 +106,7 @@ const Login: NextPageWithLayout = () => {
           icon={<IconAlertCircle size="1rem" />}
           title="Error!"
           color="red"
+          variant="filled"
         >
           {error}
         </Alert>

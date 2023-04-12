@@ -141,6 +141,7 @@ export const AvatarEdit = () => {
             Clear
           </Button>
           <Button
+            loading={setAvatarMutation.isLoading}
             disabled={file == null}
             onClick={async () => {
               await uploadAvatar();

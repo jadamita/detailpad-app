@@ -117,7 +117,11 @@ export const ProfileEdit = () => {
           />
           <Divider my="sm" />
           <Group position="right">
-            <Button disabled={setProfileMutation.isLoading} type="submit">
+            <Button
+              loading={setProfileMutation.isLoading}
+              disabled={setProfileMutation.isLoading}
+              type="submit"
+            >
               Update
             </Button>
           </Group>

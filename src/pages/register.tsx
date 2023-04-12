@@ -93,6 +93,7 @@ const Register: NextPage = () => {
           icon={<IconAlertCircle size="1rem" />}
           title="Error!"
           color="red"
+          variant="filled"
         >
           {error}
         </Alert>
