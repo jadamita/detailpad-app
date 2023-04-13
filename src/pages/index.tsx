@@ -36,7 +36,7 @@ const Home: NextPageWithLayout = () => {
       </Head>
       <div>
         <Grid>
-          <Grid.Col xl={3} lg={4} md={4} sm={6} xs={12}>
+          <Grid.Col xl={3} lg={3} md={4} sm={6} xs={12}>
             <StatCard
               title="Appointments"
               caption="Compared to previous month"
@@ -45,7 +45,7 @@ const Home: NextPageWithLayout = () => {
               icon={<IconCalendar />}
             />
           </Grid.Col>
-          <Grid.Col xl={3} lg={4} md={4} sm={6} xs={12}>
+          <Grid.Col xl={3} lg={3} md={4} sm={6} xs={12}>
             <StatCard
               title="Revenue"
               caption="Compared to previous month"
@@ -54,7 +54,7 @@ const Home: NextPageWithLayout = () => {
               icon={<IconCash />}
             />
           </Grid.Col>
-          <Grid.Col xl={3} lg={4} md={4} sm={6} xs={12}>
+          <Grid.Col xl={3} lg={3} md={4} sm={6} xs={12}>
             <StatCard
               title="Satisfaction"
               caption="Compared to previous month"
@@ -63,7 +63,7 @@ const Home: NextPageWithLayout = () => {
               icon={<IconStar />}
             />
           </Grid.Col>
-          <Grid.Col xl={3} lg={4} md={4} sm={6} xs={12}>
+          <Grid.Col xl={3} lg={3} md={4} sm={6} xs={12}>
             <StatCard
               title="Cancelation"
               caption="Compared to previous month"
