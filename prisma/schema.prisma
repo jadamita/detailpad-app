@@ -26,6 +26,12 @@ enum UserStatus {
     DELETED
 }
 
+enum ServiceType {
+    INTERIOR
+    EXTERIOR
+    OTHER
+}
+
 // Necessary for Next auth
 model Account {
     id                Int     @id @default(autoincrement())
@@ -96,9 +102,10 @@ model Company {
     id   Int    @id @default(autoincrement())
     name String
 
-    userId    Int        @unique
-    user      User[]
-    customers Customer[]
+    userId          Int               @unique
+    user            User[]
+    customers       Customer[]
+    CompanyServices CompanyServices[]
 }
 
 model Customer {
@@ -148,4 +155,39 @@ model ActivityLog {
     userId    Int
     createdAt DateTime     @default(now())
     updatedAt DateTime     @updatedAt
+}
+
+model Service {
+    id              Int               @id @default(autoincrement())
+    name            String
+    type            ServiceType
+    description     String?           @db.VarChar(1000)
+    price           Int?
+    estimatedTime   Float?
+    icon            String?
+    notes           String?
+    isAddon         Boolean?
+    isCustom        Boolean           @default(false)
+    sortOrder       Int
+    CompanyServices CompanyServices[]
+}
+
+model CompanyServices {
+    id        Int     @id @default(autoincrement())
+    companyId Int
+    serviceId Int
+    service   Service @relation(fields: [serviceId], references: [id])
+    company   Company @relation(fields: [companyId], references: [id])
+
+    isActive Boolean @default(true)
+
+    description   String?
+    price         Int?
+    estimatedTime Float?
+    icon          String?
+    notes         String?
+    isAddon       Boolean?
+
+    @@index([companyId])
+    @@index([serviceId])
 }

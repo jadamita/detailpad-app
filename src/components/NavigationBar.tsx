@@ -2,7 +2,12 @@
 
 import { Group, Navbar, ThemeIcon, UnstyledButton, Text } from "@mantine/core";
 import { UserRole } from "@prisma/client";
-import { IconDashboard, IconUsers, IconUser } from "@tabler/icons-react";
+import {
+  IconDashboard,
+  IconUsers,
+  IconUser,
+  IconAlignBoxLeftMiddle,
+} from "@tabler/icons-react";
 import { User } from "next-auth";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
@@ -55,7 +60,7 @@ const MainLink = ({ icon, color, label, path, setOpened }: MainLinkProps) => {
       }}
     >
       <Group>
-        <ThemeIcon color={color} variant="light">
+        <ThemeIcon color={color} variant="light" size={"lg"}>
           {icon}
         </ThemeIcon>
 
@@ -84,6 +89,13 @@ const getMenuitems = (user: User) => {
       color: "green",
       label: "Account",
       path: "/account",
+      sortOrder: 3,
+    },
+    {
+      icon: <IconAlignBoxLeftMiddle size="1rem" />,
+      color: "orange",
+      label: "Services",
+      path: "/services",
       sortOrder: 3,
     },
   ];

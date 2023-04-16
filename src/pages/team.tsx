@@ -4,6 +4,7 @@ import {
   Avatar,
   Badge,
   Button,
+  Divider,
   Group,
   Paper,
   ScrollArea,
@@ -122,17 +123,17 @@ const Team: NextPageWithLayout = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div>
-        <Text
-          sx={(theme) => ({
-            fontFamily: `Greycliff CF, ${theme.fontFamily || ""}`,
-            fontWeight: 500,
-            fontSize: 24,
-          })}
-        >
-          Team
-        </Text>
-        <br />
         <Paper withBorder shadow="md" p={20} radius="md">
+          <Text
+            sx={(theme) => ({
+              fontFamily: `Greycliff CF, ${theme.fontFamily || ""}`,
+              fontWeight: 500,
+              fontSize: 24,
+            })}
+          >
+            Team
+          </Text>
+          <Divider my="sm" pb={5} />
           <Button onClick={open}>Add Employee</Button>
           <ScrollArea>
             <Table miw={800} verticalSpacing="sm">

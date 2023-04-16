@@ -27,6 +27,7 @@ Project:
 - Bulletproof add user form
 - Bulletproof activate user form
 - Add time preview to time zone select
+- Resolve lint rules in ServiceList
 
 
 DONE!
