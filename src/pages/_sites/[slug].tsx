@@ -1,5 +1,19 @@
+import {
+  Box,
+  Button,
+  Center,
+  Container,
+  Grid,
+  Group,
+  Paper,
+  SimpleGrid,
+  Space,
+  Text,
+} from "@mantine/core";
+import { DatePicker } from "@mantine/dates";
 import { NextPageContext } from "next";
 import Head from "next/head";
+import { useState } from "react";
 
 interface ISlugProps {
   subdomain: string;
@@ -18,16 +32,68 @@ export function getServerSideProps(context: NextPageContext) {
 }
 
 const TestSlug: React.FC<ISlugProps> = ({ subdomain }: ISlugProps) => {
+  const [value, setValue] = useState<Date | null>(null);
+
+  const times: string[] = ["9:00am", "10:00am"];
+
   return (
     <>
       <Head>
-        <title>DetailPad - Slug</title>
-        <meta name="description" content="DetailPad Slug" />
+        <title>DetailPad - Book</title>
+        <meta name="description" content="DetailPad Book" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      Slug
-      <br />
-      {subdomain}
+      <>
+        <Center
+          sx={(theme) => ({
+            minHeight: "100vh",
+            background:
+              theme.colorScheme === "dark"
+                ? theme.colors.dark[8]
+                : theme.colors.gray[0],
+          })}
+        >
+          <Container>
+            <Space />
+            <Grid>
+              <Grid.Col span={6}>
+                <Text
+                  sx={(theme) => ({
+                    fontFamily: `Greycliff CF, ${theme.fontFamily || ""}`,
+                    fontWeight: 500,
+                    fontSize: 18,
+                  })}
+                >
+                  Select an Appointment Date
+                </Text>
+                <Paper withBorder p={10} mt={10} radius="md">
+                  <DatePicker value={value} onChange={setValue} locale="en" />
+                </Paper>
+              </Grid.Col>
+              <Grid.Col span={6}>
+                <Text
+                  sx={(theme) => ({
+                    fontFamily: `Greycliff CF, ${theme.fontFamily || ""}`,
+                    fontWeight: 500,
+                    fontSize: 18,
+                  })}
+                >
+                  Select an Appointment Date
+                </Text>
+                <Paper withBorder p={10} mt={10} radius="md">
+                  <SimpleGrid cols={3}>
+                    {times.map((x) => (
+                      <>
+                        <Button key={x}>{x}</Button>
+                      </>
+                    ))}
+                  </SimpleGrid>
+                </Paper>
+              </Grid.Col>
+            </Grid>
+          </Container>
+        </Center>
+      </>
     </>
   );
 };
