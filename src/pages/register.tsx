@@ -14,7 +14,12 @@ import {
 
 import { api } from "~/utils/api";
 import { isEmail, useForm } from "@mantine/form";
-import { IconAlertCircle, IconAt, IconLock } from "@tabler/icons-react";
+import {
+  IconAlertCircle,
+  IconAt,
+  IconCheck,
+  IconLock,
+} from "@tabler/icons-react";
 import { useState } from "react";
 
 interface IRegisterProps {
@@ -27,6 +32,7 @@ interface IRegisterProps {
 
 const Register: NextPage = () => {
   const [error, setError] = useState("");
+  const [success, setSuccess] = useState(false);
 
   const registerForm = useForm({
     initialValues: {
@@ -38,10 +44,26 @@ const Register: NextPage = () => {
     },
 
     validate: {
-      companyName: (value) =>
-        value.length < 3 ? "Company Name must have at least 3 letters" : null,
-      username: (value) =>
-        value.length < 3 ? "Name must have at least 3 letters" : null,
+      companyName: (value) => {
+        const allowedChars = /[^a-zA-Z0-9 ]/g;
+        if (value.length < 3) {
+          return "Business Name must have at least 3 letters";
+        }
+        if (allowedChars.test(value)) {
+          return "Business Name must not contain any special characters";
+        }
+        return null;
+      },
+      username: (value) => {
+        const allowedChars = /[^a-zA-Z0-9 ]/g;
+        if (value.length < 3) {
+          return "Username Name must have at least 3 letters";
+        }
+        if (allowedChars.test(value)) {
+          return "Username Name must not contain any special characters";
+        }
+        return null;
+      },
       email: isEmail("Invalid email"),
       password: (value) => {
         if (value.length < 6) {
@@ -55,16 +77,24 @@ const Register: NextPage = () => {
     },
   });
 
-  const registerMutation = api.user.register.useMutation();
+  const registerMutation = api.user.register.useMutation({
+    onError: (e) => {
+      setError(e.message ?? "Error when registering for a new account");
+    },
+    onSuccess: () => {
+      setSuccess(true);
+      registerForm.reset();
+    },
+  });
 
   const submitForm = async (values: IRegisterProps) => {
     setError("");
-    console.log(values);
+    setSuccess(false);
     try {
       await registerMutation.mutateAsync(values);
     } catch (error) {
       setError(
-        registerMutation.error?.message ||
+        registerMutation.error?.message ??
           "Error when registering for a new account"
       );
     }
@@ -90,12 +120,26 @@ const Register: NextPage = () => {
       <br />
       {error && (
         <Alert
-          icon={<IconAlertCircle size="1rem" />}
+          icon={<IconAlertCircle />}
           title="Error!"
           color="red"
           variant="filled"
         >
           {error}
+        </Alert>
+      )}
+      {success && (
+        <Alert
+          icon={<IconCheck />}
+          title="Success!"
+          color="green"
+          variant="filled"
+        >
+          Your new account has been created successfuly!
+          <br />
+          <Anchor href="/login" color="white">
+            <strong>Please click here to login</strong>
+          </Anchor>
         </Alert>
       )}
 
@@ -106,6 +150,7 @@ const Register: NextPage = () => {
             label="Business Name"
             placeholder="Your Company Name"
             required
+            maxLength={64}
             {...registerForm.getInputProps("companyName")}
           />
           <TextInput
@@ -113,6 +158,7 @@ const Register: NextPage = () => {
             placeholder="Your username"
             mt="md"
             required
+            maxLength={64}
             {...registerForm.getInputProps("username")}
           />
           <TextInput
@@ -121,6 +167,7 @@ const Register: NextPage = () => {
             required
             mt="md"
             icon={<IconAt size="1rem" />}
+            maxLength={64}
             {...registerForm.getInputProps("email")}
           />
           <PasswordInput
@@ -129,6 +176,7 @@ const Register: NextPage = () => {
             required
             mt="md"
             icon={<IconLock size="1rem" />}
+            maxLength={256}
             {...registerForm.getInputProps("password")}
           />
           <PasswordInput
@@ -137,6 +185,7 @@ const Register: NextPage = () => {
             required
             mt="md"
             icon={<IconLock size="1rem" />}
+            maxLength={256}
             {...registerForm.getInputProps("confirmPassword")}
           />
           <Button type="submit" fullWidth mt="xl">

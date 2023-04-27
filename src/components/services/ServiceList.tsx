@@ -13,6 +13,7 @@ import {
   TransferListData,
   TransferListItemComponent,
   TransferListItemComponentProps,
+  LoadingOverlay,
 } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
 import { useEffect, useState } from "react";
@@ -78,7 +79,7 @@ export const ServiceList = () => {
   }, [services]);
 
   if (isLoading) {
-    return <h1>LOADING</h1>;
+    return <LoadingOverlay visible={isLoading} overlayBlur={2} />;
   }
 
   const updateList = async (value: TransferListData) => {

@@ -21,10 +21,8 @@ Customization: A feature to customize the software to suit the specific needs of
 
 
 Project:
-- Cleanup all the eslint disables :(
-- Bulletproof register form
-- Bulletproof login form
 - Bulletproof add user form
+- Cleanup all the eslint disables :(
 - Bulletproof activate user form
 - Add time preview to time zone select
 - Resolve lint rules in ServiceList
@@ -32,3 +30,5 @@ Project:
 
 DONE!
 - Power navigation items from something else then hard-coded data.
+- Bulletproof register form
+- Bulletproof login form
