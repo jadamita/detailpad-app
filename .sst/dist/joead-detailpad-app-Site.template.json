@@ -1,0 +1,281 @@
+{
+ "Resources": {
+  "CustomResourceHandlerServiceRole41AEC181": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "lambda.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "ManagedPolicyArns": [
+     {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+       ]
+      ]
+     }
+    ],
+    "Tags": [
+     {
+      "Key": "sst:app",
+      "Value": "detailpad-app"
+     },
+     {
+      "Key": "sst:stage",
+      "Value": "joead"
+     }
+    ]
+   }
+  },
+  "CustomResourceHandlerE8FB56BA": {
+   "Type": "AWS::Lambda::Function",
+   "Properties": {
+    "Code": {
+     "S3Bucket": "cdk-hnb659fds-assets-164578824321-us-east-1",
+     "S3Key": "4c8a9d0db7c1b2e616f2ed7d8abd8a769c68238a39a66144d671d10b968a4943.zip"
+    },
+    "Role": {
+     "Fn::GetAtt": [
+      "CustomResourceHandlerServiceRole41AEC181",
+      "Arn"
+     ]
+    },
+    "Handler": "index.handler",
+    "MemorySize": 1024,
+    "Runtime": "nodejs16.x",
+    "Tags": [
+     {
+      "Key": "sst:app",
+      "Value": "detailpad-app"
+     },
+     {
+      "Key": "sst:stage",
+      "Value": "joead"
+     }
+    ],
+    "Timeout": 900
+   },
+   "DependsOn": [
+    "CustomResourceHandlerServiceRole41AEC181"
+   ]
+  },
+  "siteServerFunctionRole1F8F4FAC": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "AWS": "*"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "MaxSessionDuration": 43200,
+    "Tags": [
+     {
+      "Key": "sst:app",
+      "Value": "detailpad-app"
+     },
+     {
+      "Key": "sst:stage",
+      "Value": "joead"
+     }
+    ]
+   }
+  },
+  "siteServerFunctionRoleDefaultPolicy213DB8A5": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": [
+        "xray:PutTraceSegments",
+        "xray:PutTelemetryRecords"
+       ],
+       "Effect": "Allow",
+       "Resource": "*"
+      },
+      {
+       "Action": "iot:*",
+       "Effect": "Allow",
+       "Resource": "*"
+      },
+      {
+       "Action": "s3:*",
+       "Effect": "Allow",
+       "Resource": {
+        "Fn::Join": [
+         "",
+         [
+          "arn:",
+          {
+           "Ref": "AWS::Partition"
+          },
+          ":s3:::sstbootstrap-useast124d14e4b-1bijgeqljey7g"
+         ]
+        ]
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "siteServerFunctionRoleDefaultPolicy213DB8A5",
+    "Roles": [
+     {
+      "Ref": "siteServerFunctionRole1F8F4FAC"
+     }
+    ]
+   }
+  },
+  "siteServerFunctionA4E45ACA": {
+   "Type": "AWS::Lambda::Function",
+   "Properties": {
+    "Code": {
+     "S3Bucket": "cdk-hnb659fds-assets-164578824321-us-east-1",
+     "S3Key": "9fe9969c98dee83cbe72e215307d8491aa401ab9894e93572633e9002918d92c.zip"
+    },
+    "Role": {
+     "Fn::GetAtt": [
+      "siteServerFunctionRole1F8F4FAC",
+      "Arn"
+     ]
+    },
+    "Description": "Server handler placeholder",
+    "Environment": {
+     "Variables": {
+      "SST_FUNCTION_ID": "c8b87c0f242409772bafd4a55277df0cac066d6eb2",
+      "AWS_NODEJS_CONNECTION_REUSE_ENABLED": "1",
+      "SST_APP": "detailpad-app",
+      "SST_STAGE": "joead",
+      "SST_SSM_PREFIX": "/sst/detailpad-app/joead/"
+     }
+    },
+    "EphemeralStorage": {
+     "Size": 512
+    },
+    "Handler": "bridge.handler",
+    "MemorySize": 1024,
+    "Runtime": "nodejs16.x",
+    "Tags": [
+     {
+      "Key": "sst:app",
+      "Value": "detailpad-app"
+     },
+     {
+      "Key": "sst:stage",
+      "Value": "joead"
+     }
+    ],
+    "Timeout": 10,
+    "TracingConfig": {
+     "Mode": "Active"
+    }
+   },
+   "DependsOn": [
+    "siteServerFunctionRoleDefaultPolicy213DB8A5",
+    "siteServerFunctionRole1F8F4FAC"
+   ]
+  },
+  "siteServerFunctionEventInvokeConfigFF1EDAB7": {
+   "Type": "AWS::Lambda::EventInvokeConfig",
+   "Properties": {
+    "FunctionName": {
+     "Ref": "siteServerFunctionA4E45ACA"
+    },
+    "Qualifier": "$LATEST",
+    "MaximumRetryAttempts": 0
+   }
+  },
+  "siteParameterurl3D1716BC": {
+   "Type": "AWS::SSM::Parameter",
+   "Properties": {
+    "Type": "String",
+    "Value": "localhost",
+    "Name": "/sst/detailpad-app/joead/NextjsSite/site/url",
+    "Tags": {
+     "sst:app": "detailpad-app",
+     "sst:stage": "joead"
+    }
+   }
+  }
+ },
+ "Outputs": {
+  "SSTMetadata": {
+   "Value": {
+    "Fn::Join": [
+     "",
+     [
+      "{\"app\":\"detailpad-app\",\"stage\":\"joead\",\"version\":\"2.7.2\",\"metadata\":[{\"id\":\"site\",\"addr\":\"c8d9b70301bdded802f947167b72d31bba821352b7\",\"stack\":\"joead-detailpad-app-Site\",\"type\":\"NextjsSite\",\"data\":{\"mode\":\"placeholder\",\"path\":\".\",\"server\":\"",
+      {
+       "Fn::GetAtt": [
+        "siteServerFunctionA4E45ACA",
+        "Arn"
+       ]
+      },
+      "\",\"secrets\":[]}},{\"id\":\"ServerFunction\",\"addr\":\"c8b87c0f242409772bafd4a55277df0cac066d6eb2\",\"stack\":\"joead-detailpad-app-Site\",\"type\":\"Function\",\"data\":{\"arn\":\"",
+      {
+       "Fn::GetAtt": [
+        "siteServerFunctionA4E45ACA",
+        "Arn"
+       ]
+      },
+      "\",\"localId\":\"c8b87c0f242409772bafd4a55277df0cac066d6eb2\",\"secrets\":[]}}]}"
+     ]
+    ]
+   }
+  }
+ },
+ "Parameters": {
+  "BootstrapVersion": {
+   "Type": "AWS::SSM::Parameter::Value<String>",
+   "Default": "/cdk-bootstrap/hnb659fds/version",
+   "Description": "Version of the CDK Bootstrap resources in this environment, automatically retrieved from SSM Parameter Store. [cdk:skip]"
+  }
+ },
+ "Rules": {
+  "CheckBootstrapVersion": {
+   "Assertions": [
+    {
+     "Assert": {
+      "Fn::Not": [
+       {
+        "Fn::Contains": [
+         [
+          "1",
+          "2",
+          "3",
+          "4",
+          "5"
+         ],
+         {
+          "Ref": "BootstrapVersion"
+         }
+        ]
+       }
+      ]
+     },
+     "AssertDescription": "CDK bootstrap stack version 6 required. Please run 'cdk bootstrap' with a recent version of the CDK CLI."
+    }
+   ]
+  }
+ }
+}
